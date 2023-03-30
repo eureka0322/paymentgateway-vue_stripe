@@ -1,0 +1,46 @@
+image: node:6.9.4
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - node
+        script:
+          - apt-get update && apt-get install -y python-dev
+          - curl -O https://bootstrap.pypa.io/get-pip.py
+          - python get-pip.py
+          - pip install awscli 
+          - cd gofundraise.webcomponents
+          - export VersionNumber="$BITBUCKET_BRANCH.$BITBUCKET_BUILD_NUMBER"
+          - export Env=test
+          - export AWS_ACCESS_KEY_ID="$PROD_AWS_ACCESS_KEY_ID"
+          - export AWS_SECRET_ACCESS_KEY="$PROD_AWS_SECRET_ACCESS_KEY"
+          - npm install
+          - npm test
+          - npm run build
+          - chmod +x deploy.sh
+          - ./deploy.sh
+        artifacts:
+          - gofundraise.webcomponents/dist/**
+  branches:
+    master:
+      - step:
+          caches:
+            - node
+          script:
+            - apt-get update && apt-get install -y python-dev
+            - curl -O https://bootstrap.pypa.io/get-pip.py
+            - python get-pip.py
+            - pip install awscli 
+            - cd gofundraise.webcomponents
+            - export VersionNumber="$MajorVersion.$MinorVersion.$BITBUCKET_BUILD_NUMBER"
+            - export Env=prod
+            - export AWS_ACCESS_KEY_ID="$PROD_AWS_ACCESS_KEY_ID"
+            - export AWS_SECRET_ACCESS_KEY="$PROD_AWS_SECRET_ACCESS_KEY"
+            - npm install
+            - npm test
+            - npm run build
+            - chmod +x deploy.sh 
+            - ./deploy.sh
+          artifacts:
+            - gofundraise.webcomponents/dist/**

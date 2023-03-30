@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>Demo of Payment gateway widget</title>
+  <script src="https://unpkg.com/vue" charset="utf-8"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/1.7.0/document-register-element.js"></script>
+  <script src="./dist/umd/gf-payments.min.js" charset="utf-8"></script>
+  <script src="./dist/umd/gf-payments.min.css"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+<div id="app">
+  <gf-payments type="paydock"></gf-payments>
+  <gf-payments type="braintree"></gf-payments>
+</div>
+
+<script type="text/javascript">
+  Vue.component('gf-payments', window.GfPayments.default);
+  new Vue({el: '#app'});
+</script>
+</body>
+</html>
